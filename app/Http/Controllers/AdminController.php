@@ -12,7 +12,7 @@ class AdminController extends Controller
     public function index()
     {
         $users = User::all();
-        $advertisements = Advertisement::all(); 
+        $advertisements = Advertisement::all();
         return view('layouts.index', compact('advertisements', 'users'));
     }
 
@@ -70,5 +70,25 @@ class AdminController extends Controller
 
         // Перенаправление на страницу списка объявлений после обновления
         return redirect()->route('admin.index');
+    }
+
+    public function banUser(User $user)
+    {
+        if ($user->Role === 'Администратор') {
+            return redirect()->back()->with('error', 'Администратора нельзя забанить.');
+        }
+
+        $user->is_banned = true;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Пользователь успешно забанен.');
+    }
+
+    public function unbanUser(User $user)
+    {
+        $user->is_banned = false;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Пользователь успешно разбанен.');
     }
 }

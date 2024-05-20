@@ -34,10 +34,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Маршруты для объявлений
 Route::get('/advertisements/create', [AdvertisementController::class, 'create'])->name('advertisements.create')->middleware('check.registered');
-Route::post('/advertisements', [AdvertisementController::class, 'store'])->name('advertisements.store');
+Route::post('/advertisements', [AdvertisementController::class, 'store'])->name('advertisements.store')->middleware('check.registered');
 Route::post('/advertisements/{id}/add-to-cart', [AdvertisementController::class, 'addToCart'])->name('advertisements.add-to-cart')->middleware('check.registered');
 Route::get('/cart', [AdvertisementController::class, 'showCart'])->name('cart.index')->middleware('check.registered');
 Route::delete('/cart/{cart}/remove', [AdvertisementController::class, 'removeCart'])->name('cart.remove')->middleware('check.registered');
+Route::get('/search', [AdvertisementController::class, 'search'])->name('search');
 
 Route::get('/admin', [AdminController::class, 'index'], [UserController::class])->name('admin.index')->middleware('admin');
 Route::put('/admin/{advertisement}/approve', [AdminController::class, 'approve'])->name('admin.approve')->middleware('admin');
@@ -45,6 +46,9 @@ Route::put('/admin/{advertisement}/reject', [AdminController::class, 'reject'])-
 
 Route::get('/admin/users/{id}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit')->middleware('admin');
 Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.users.update')->middleware('admin');
+
+Route::put('/admin/users/{user}/ban', [AdminController::class, 'banUser'])->name('admin.users.ban')->middleware('admin');
+Route::put('/admin/users/{user}/unban', [AdminController::class, 'unbanUser'])->name('admin.users.unban')->middleware('admin');
 
 Route::get('/admin/advertisements/{id}/edit', [AdminController::class, 'editAdvertisement'])->name('admin.advertisements.edit')->middleware('admin');
 Route::put('/admin/advertisements/{id}', [AdminController::class, 'updateAdvertisement'])->name('admin.advertisements.update')->middleware('admin');

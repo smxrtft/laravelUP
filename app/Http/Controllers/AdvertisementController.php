@@ -67,4 +67,18 @@ class AdvertisementController extends Controller
         $carts = Cart::where('UserID', auth()->id())->with('advertisement')->get();
         return view('category.cart', compact('carts'));
     }
+
+    public function search(Request $request)
+{
+    $query = $request->input('query');
+
+    $advertisements = Advertisement::where('Title', 'like', "%{$query}%")
+        ->orWhereHas('user', function ($q) use ($query) {
+            $q->where('Username', $query)->where('Status', 'Одобрено')->with('user');
+        })
+        ->get();
+
+    return view('search', compact('advertisements', 'query'));
+}
+
 }

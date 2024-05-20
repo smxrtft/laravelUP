@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('Email')->unique();
             $table->string('UserPhoto')->nullable();
             $table->enum('Role', ['Пользователь', 'Администратор']);
+            $table->boolean('is_banned')->default(false);
             // Добавьте другие необходимые поля для профиля пользователя
             $table->timestamps();
         });

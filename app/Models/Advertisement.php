@@ -56,4 +56,5 @@ class Advertisement extends Model
     {
         return $this->belongsTo(Category::class, 'CategoryID');
     }
+
 }

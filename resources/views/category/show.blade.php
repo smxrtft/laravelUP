@@ -145,6 +145,11 @@
                                 <a class="nav-link" href="{{ route('register') }}">Зарегистрироваться</a>
                             </li>
                         @else
+                        
+                        <form class="form-inline my-2 my-lg-0" action="{{ route('search') }}" method="GET">
+                            <input class="form-control mr-sm-2" type="search" placeholder="Поиск" aria-label="Поиск" name="query">
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>
+                        </form>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('home') }}">Главная</a>
                             </li>
@@ -153,10 +158,12 @@
                                     <a class="nav-link" href="{{ route('admin.index') }}">Админ панель</a>
                                 </li>
                             @endif
-                            <li class="nav-item">
-                                <a href="{{ route('advertisements.create') }}" class="btn nav-link">Создать
-                                    объявление</a>
-                            </li>
+                            @if (Auth::check() && !Auth::user()->is_banned)
+                                <li class="nav-item">
+                                    <a href="{{ route('advertisements.create') }}" class="btn nav-link">Создать
+                                        объявление</a>
+                                </li>
+                            @endif
                             <li class="nav-item">
                                 <a href="{{ route('cart.index') }}" class="btn nav-link btn-success">Корзина</a>
                             </li>
@@ -173,31 +180,39 @@
         </nav>
     </header>
 
-    <div class="container container1 mt-5">
-        <h1 class="text-center mb-4">{{ $category->CategoryName }}</h1>
 
-        <div class="row">
-            @foreach ($advertisements as $advertisement)
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="{{ asset('images/' . $advertisement->AdPhoto) }}" class="card-img-top"
-                            alt="{{ $advertisement->Title }}">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $advertisement->Title }}</h5>
-                            <p class="card-text">{{ $advertisement->Description }}</p>
-                            <p class="card-text"><small class="text-muted">Автор:
-                                    {{ $advertisement->user->Username }}</small></p>
-                            <form action="{{ route('advertisements.add-to-cart', $advertisement->AdID) }}"
-                                method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-primary">Добавить в корзину</button>
-                            </form>
+
+
+
+    @if (Auth::check() && Auth::user()->is_banned)
+        <h1 class="text-center" style="margin-top: 50px">Вы забанены!</h1>
+    @else
+        <div class="container container1 mt-5">
+            <h1 class="text-center mb-4">{{ $category->CategoryName }}</h1>
+
+            <div class="row">
+                @foreach ($advertisements as $advertisement)
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <img src="{{ asset('images/' . $advertisement->AdPhoto) }}" class="card-img-top"
+                                alt="{{ $advertisement->Title }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $advertisement->Title }}</h5>
+                                <p class="card-text">{{ $advertisement->Description }}</p>
+                                <p class="card-text"><small class="text-muted">Автор:
+                                        {{ $advertisement->user->Username }}</small></p>
+                                <form action="{{ route('advertisements.add-to-cart', $advertisement->AdID) }}"
+                                    method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary">Добавить в корзину</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
         </div>
-    </div>
+    @endif
 
     <footer class="footer mt-auto py-3">
         <div class="container">

@@ -50,6 +50,7 @@
                 <th>Имя</th>
                 <th>Email</th>
                 <th>Роль</th>
+                <th>Статус</th>
                 <th>Действие</th>
             </tr>
         </thead>
@@ -60,11 +61,24 @@
                     <td>{{ $user->Username }}</td>
                     <td>{{ $user->Email }}</td>
                     <td>{{ $user->Role }}</td>
+                    <td>{{ $user->is_banned ? 'Забанен' : 'Не забанен' }}</td>
                     <td>
                         <a href="{{ route('admin.users.edit', $user->UserID) }}" class="btn btn-primary btn-sm">Редактировать</a>
-                    </td>
-                    <td>
-                        <!-- Добавьте здесь действия для пользователя, если это необходимо -->
+                        @if ($user->Role !== 'Администратор')
+                            @if ($user->is_banned)
+                                <form action="{{ route('admin.users.unban', $user->UserID) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn btn-success btn-sm">Разбанить</button>
+                                </form>
+                            @else
+                                <form action="{{ route('admin.users.ban', $user->UserID) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn btn-danger btn-sm">Забанить</button>
+                                </form>
+                            @endif
+                        @endif
                     </td>
                 </tr>
             @endforeach

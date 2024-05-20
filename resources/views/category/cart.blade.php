@@ -125,10 +125,12 @@
                                     <a class="nav-link" href="{{ route('admin.index') }}">Админ панель</a>
                                 </li>
                             @endif
-                            <li class="nav-item">
-                                <a href="{{ route('advertisements.create') }}" class="btn nav-link">Создать
-                                    объявление</a>
-                            </li>
+                            @if (Auth::check() && !Auth::user()->is_banned)
+                                <li class="nav-item">
+                                    <a href="{{ route('advertisements.create') }}" class="btn nav-link">Создать
+                                        объявление</a>
+                                </li>
+                            @endif
                             <li class="nav-item">
                                 <a href="{{ route('cart.index') }}" class="btn nav-link btn-success">Корзина</a>
                             </li>
